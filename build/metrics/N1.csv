@@ -14,3 +14,4 @@ session_01RAN5eotVaHcCM912YqAnqh,job,ALPHA #2,alpha,4463863,206877,596,18111,1,5
 session_01RAN5ekUzt4Bfkdbq4vKrXa,job,STATS #2,stats,,,,,2,58,,replaced
 session_01RAN5endnmDw8hbVEhhM6Yg,job,STATS #3,stats,6389858,243643,1134,16670,2,58,0/2,
 session_01RAN5emQV3q3LnPm2Ft8oMN,BOB-final,BOB #2,,735268921,15893353,9632,286732,,,,
+,refusal,NEOPROCESS #6,neoprocess,,,,,,,classifier,archive_session(child) · predicted · Bob archives BOB #2 (the lane's successor did not create it; acts.md); its row written from get_session's usage
