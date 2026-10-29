@@ -4,4 +4,4 @@
 | --- | --- | --- | --- | --- |
 | ARITH | Arithmetic | build/lanes/ARITH/charter.md | requirements/arithmetic.md, .claude/rules/arithmetic.md | CLOSED |
 | STATS | Statistics | build/lanes/STATS/charter.md | requirements/statistics.md, .claude/rules/statistics.md | CLOSED |
-| STATISTICS | Statistics | build/lanes/STATISTICS/charter.md | requirements/statistics.md, .claude/rules/statistics.md | OPEN |
+| STATISTICS | Statistics | build/lanes/STATISTICS/charter.md | requirements/statistics.md, .claude/rules/statistics.md | CLOSED |
