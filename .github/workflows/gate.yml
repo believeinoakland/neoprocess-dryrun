@@ -1,0 +1,21 @@
+name: gate
+on:
+  pull_request:
+    branches: [tranche]
+  merge_group:
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v4
+        with:
+          repository: believeinoakland/civicos-process
+          path: .neoprocess
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: the gate (artifacts, ownership, the module's tests and its users', the checks, the sizes, the shims)
+        run: node .neoprocess/tools/neo.mjs gate --product "." --process "/home/user/civicos-process" --repo "believeinoakland/civicos-process" --base "${{ github.event.pull_request.base.sha || github.event.merge_group.base_sha }}"
