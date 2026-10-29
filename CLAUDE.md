@@ -1,6 +1,6 @@
 # Built by neoProcess
 
-The process is `believeinoakland/civicos-process`, attached at `/home/user/civicos-process` on its branch `main` (if it is missing, attach it with add_repo, clone it there and check that branch out). Nothing about the process is decided in this repository: it supplies what `/home/user/civicos-process/PRODUCT-SUPPLIES.md` lists, and nothing else.
+The process is `believeinoakland/neoprocess`, attached at `/home/user/neoprocess` on its branch `main` (if it is missing, attach it with add_repo, clone it there and check that branch out). Nothing about the process is decided in this repository: it supplies what `/home/user/neoprocess/PRODUCT-SUPPLIES.md` lists, and nothing else.
 
 At the start of every session, before anything else, invoke the skill `neoprocess` with your role as its argument: `/neoprocess bob`, `/neoprocess job`, `/neoprocess lane` or `/neoprocess root`. It prints your process text, which you read whole and never scan (P20), and the start command that records your role; the hooks refuse every act until it is recorded.
 
