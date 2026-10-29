@@ -5,3 +5,4 @@ session,role,name,module,cache-read,cache-write,input,output,test runs,module li
 session_01RAN5eopBsHxRYCsDzgnevo,job,ALPHA #1,alpha,16064686,203751,2985,40551,3,44,no,
 session_01RAN5eopcvLyS62iC33nnBU,job,BETA #1,beta,6810188,187504,634,21415,1,53,no,
 ,refusal,BOB #1,bob,,,,,,,hook,create_session STATS #1 (the job for module stats) as printed by neo layer start --layer 2 · unpredicted · neoProcess #5: process flaw P3; a lane id equal to a module's upper-cased id (STATS  stats) makes the job's title the lane's  in the hook and in names generally
+,refusal,BOB #1,bob,,,,,,,hook,create_session STATISTICS #1 as printed by neo ask ask --ask A5 (the dormant lane's start) · unpredicted · neoProcess #5: process flaw P3; ask ask must owe start lane <ID> when it prints a dormant lane's create_session
