@@ -42,8 +42,9 @@ export function distinct(list) {
   return true;
 }
 
-// R10–R11: the middle element of a sorted copy (the list is not changed) for an odd length; for an even length,
-// alpha.sum of the two middle elements over 2 (QUESTION #2 open). An empty list is a RangeError first, then an element
+// R10–R11: the middle element of a stable sorted copy (the list is not changed; -0 and +0 keep their order) for an
+// odd length. For an even length R11 asks alpha.midpoint of the two (A5), built in the completion round; until then
+// alpha.sum of the two over 2. An empty list is a RangeError first, then an element
 // that is not a finite number is a TypeError, as max refuses them (R5, R8).
 export function median(list) {
   if (list.length === 0) throw new RangeError('median: empty list');

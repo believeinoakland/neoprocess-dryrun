@@ -197,12 +197,15 @@ test('R9 distinct is true when no two elements are the same value as a Set compa
   assert.equal(distinct(long), false);
 });
 
-// The middle by the definition: the element of the list that has as many elements below it as above it, counting
-// equal values on either side; for an odd length that is the (n >> 1)-th smallest.
+// The middle by the definition: list sorted ascending, equal elements (-0 and +0 among them) keeping their order in
+// the list; the element ranked n >> 1, where an element's rank is the count of elements below it plus the count of
+// equal elements before it in the list.
 function middle(list) {
-  for (const x of list) {
-    const below = list.filter((y) => y < x).length, same = list.filter((y) => y === x).length;
-    if (below <= list.length >> 1 && list.length >> 1 < below + same) return x;
+  const k = list.length >> 1;
+  for (let i = 0; i < list.length; i++) {
+    let rank = 0;
+    for (let j = 0; j < list.length; j++) if (list[j] < list[i] || (j < i && list[j] === list[i])) rank++;
+    if (rank === k) return list[i];
   }
   throw new Error('no middle');
 }
@@ -216,11 +219,15 @@ test('R10 median returns the middle element of an odd-length list sorted ascendi
     const copy = [...list], got = median(list);
     assert.deepEqual(list, copy, `the list of ${list.length} is not changed`);
     assert.ok(list.some((x) => Object.is(x, got)), `median of ${list.length} is an element`);
-    // +0 and -0 are equal in ascending order and R10 does not order them, so either zero is the middle: compare by ===.
-    assert.ok(got === middle(list), `median of ${list.length}`);
+    assert.ok(Object.is(got, middle(list)), `median of ${list.length}`);
     checked++;
   }
   assert.ok(checked > 100);
+  // -0 and +0 are equal in ascending order and keep their order in the list (R10's examples and their kin).
+  assert.ok(Object.is(median([0, -0, 1]), -0));
+  assert.ok(Object.is(median([-0, 0, 1]), 0));
+  assert.ok(Object.is(median([1, 0, -0]), -0));
+  assert.ok(Object.is(median([-0, 0, 0, -0, -0]), 0));
   assert.equal(median([5]), 5);
   assert.equal(median([3, 1, 2]), 2);
   assert.equal(median([1, 2, 3]), 2);
