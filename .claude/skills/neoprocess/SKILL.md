@@ -5,10 +5,10 @@ hooks:
   PreToolUse:
     - hooks:
         - type: command
-          command: 'node "/home/user/civicos-process/tools/hooks.mjs" pre'
+          command: 'node "/home/user/neoprocess/tools/hooks.mjs" pre'
   Stop:
     - hooks:
         - type: command
-          command: 'node "/home/user/civicos-process/tools/hooks.mjs" stop'
+          command: 'node "/home/user/neoprocess/tools/hooks.mjs" stop'
 ---
-!`node "/home/user/civicos-process/tools/proc.mjs" reading --role "$ARGUMENTS" --product "." || echo "STOP: the process repository is not at /home/user/civicos-process, or the role is not bob, job, lane or root; attach it, then invoke this skill again with your role."`
+!`node "/home/user/neoprocess/tools/proc.mjs" reading --role "$ARGUMENTS" --product "." || echo "STOP: the process repository is not at /home/user/neoprocess, or the role is not bob, job, lane or root; attach it, then invoke this skill again with your role."`

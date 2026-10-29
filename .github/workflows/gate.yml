@@ -11,11 +11,11 @@ jobs:
           fetch-depth: 0
       - uses: actions/checkout@v4
         with:
-          repository: believeinoakland/civicos-process
+          repository: believeinoakland/neoprocess
           ref: main
           path: .neoprocess
       - uses: actions/setup-node@v4
         with:
           node-version: 22
       - name: the gate (artifacts, ownership, the module's tests and its users', the checks, the sizes, the shims), against the merge ref's own base
-        run: node .neoprocess/tools/proc.mjs gate --product "." --process "/home/user/civicos-process" --repo "believeinoakland/civicos-process" --ref "main" --base HEAD^1
+        run: node .neoprocess/tools/proc.mjs gate --product "." --process "/home/user/neoprocess" --repo "believeinoakland/neoprocess" --ref "main" --base HEAD^1
