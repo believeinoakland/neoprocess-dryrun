@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mean, max, min, distinct } from '../src/index.mjs';
-import { sum } from '../../alpha/src/index.mjs';
+import { mean, max, min, distinct, median } from '../src/index.mjs';
+import { sum, midpoint } from '../../alpha/src/index.mjs';
 
 // Finite numbers covering every class: zeros of both signs, subnormals, the extremes,
 // fractions whose sum rounds, integers beyond 2^53, and seeded random values.
@@ -24,8 +24,13 @@ function* lists() {
   }
 }
 
-test('R1 mean is alpha.sum(list) / list.length, and 0 for an empty list', () => {
-  assert.ok(Object.is(mean([]), 0));
+test('R1 mean of a non-empty list is alpha.sum(list) / list.length; an empty list is a RangeError, judged first', () => {
+  // The empty list is refused as a RangeError, never read as alpha.sum's 0 for it.
+  for (const empty of [[], new Array(0), Array.from([])]) {
+    assert.throws(() => mean(empty), (e) => e.constructor === RangeError && e.message === 'mean: empty list');
+  }
+  let maxErr; try { max([]); } catch (e) { maxErr = e; }
+  assert.ok(maxErr instanceof RangeError, 'max refuses the empty list the same way');
   for (const list of lists()) {
     assert.ok(Object.is(mean(list), sum(list) / list.length), `mean of ${list.length}`);
   }
@@ -53,7 +58,7 @@ test('R2 mean refuses an element that is not a finite number as alpha.sum does',
   }
 });
 
-test('R3 mean, max, min and distinct are pure: no state, no input or output', () => {
+test('R3 mean, max, min, distinct and median are pure: no state, no input or output', () => {
   const globalsBefore = Object.getOwnPropertyNames(globalThis).sort();
   const writes = [];
   const out = process.stdout.write, err = process.stderr.write;
@@ -61,12 +66,12 @@ test('R3 mean, max, min and distinct are pure: no state, no input or output', ()
   process.stderr.write = (...a) => { writes.push(a); return true; };
   let first, again;
   try {
-    const run = () => [...lists()].map((l) => [mean(l), max(l), min(l), distinct(l), distinct([...l, l[0]])]);
+    const run = () => [...lists()].map((l) => [mean(l), max(l), min(l), distinct(l), distinct([...l, l[0]]), median(l)]);
     first = run();
     // Interleave other calls (throwing ones included), then repeat: results depend on the arguments alone.
     for (const a of FINITE) {
-      for (const f of [mean, max, min]) { f([a, a]); assert.throws(() => f([a, NaN])); }
-      mean([]); distinct([]); distinct([a, a]); assert.throws(() => max([])); assert.throws(() => min([]));
+      for (const f of [mean, max, min, median]) { f([a, a]); assert.throws(() => f([a, NaN])); }
+      assert.throws(() => mean([])); distinct([]); distinct([a, a]); assert.throws(() => max([])); assert.throws(() => min([])); assert.throws(() => median([]));
     }
     again = run();
   } finally {
@@ -75,7 +80,7 @@ test('R3 mean, max, min and distinct are pure: no state, no input or output', ()
   assert.deepEqual(again, first);
   assert.deepEqual(writes, []);
   assert.deepEqual(Object.getOwnPropertyNames(globalThis).sort(), globalsBefore);
-  for (const f of [mean, max, min, distinct]) {
+  for (const f of [mean, max, min, distinct, median]) {
     const list = [3, 1, 2];
     f(list);
     assert.deepEqual(list, [3, 1, 2]); // the argument is not changed
@@ -195,4 +200,108 @@ test('R9 distinct is true when no two elements are the same value as a Set compa
   assert.equal(distinct(long), true);
   long.push(999999);
   assert.equal(distinct(long), false);
+});
+
+// The middle by the definition: list sorted ascending, equal elements (-0 and +0 among them) keeping their order in
+// the list; the element ranked n >> 1, where an element's rank is the count of elements below it plus the count of
+// equal elements before it in the list.
+function middle(list) {
+  const k = list.length >> 1;
+  for (let i = 0; i < list.length; i++) {
+    let rank = 0;
+    for (let j = 0; j < list.length; j++) if (list[j] < list[i] || (j < i && list[j] === list[i])) rank++;
+    if (rank === k) return list[i];
+  }
+  throw new Error('no middle');
+}
+const odd = (l) => l.length % 2 === 1;
+
+test('R10 median returns the middle element of an odd-length list sorted ascending; the list is not changed', () => {
+  // Odd lengths here; the even case is R11's.
+  let checked = 0;
+  for (const list of lists()) {
+    if (!odd(list)) continue;
+    const copy = [...list], got = median(list);
+    assert.deepEqual(list, copy, `the list of ${list.length} is not changed`);
+    assert.ok(list.some((x) => Object.is(x, got)), `median of ${list.length} is an element`);
+    assert.ok(Object.is(got, middle(list)), `median of ${list.length}`);
+    checked++;
+  }
+  assert.ok(checked > 100);
+  // -0 and +0 are equal in ascending order and keep their order in the list (R10's examples and their kin).
+  assert.ok(Object.is(median([0, -0, 1]), -0));
+  assert.ok(Object.is(median([-0, 0, 1]), 0));
+  assert.ok(Object.is(median([1, 0, -0]), -0));
+  assert.ok(Object.is(median([-0, 0, 0, -0, -0]), 0));
+  assert.equal(median([5]), 5);
+  assert.equal(median([3, 1, 2]), 2);
+  assert.equal(median([1, 2, 3]), 2);
+  assert.equal(median([9, -4, 7, 0, 7]), 7);
+  assert.equal(median([2, 2, 1]), 2);
+  assert.equal(median([-3, -1, -2]), -2);
+  assert.equal(median([10, 2, 33]), 10); // numeric order, not the default string order ('10' < '2' < '33')
+  assert.equal(median([Number.MAX_VALUE, -Number.MAX_VALUE, Number.MIN_VALUE]), Number.MIN_VALUE);
+  const list = [5, 4, 3, 2, 1];
+  median(list);
+  assert.deepEqual(list, [5, 4, 3, 2, 1]);
+  const long = Array.from({ length: 1e6 + 1 }, (_, i) => (i * 7919) % (1e6 + 1)); // a permutation of 0..1e6
+  assert.equal(median(long), 5e5);
+});
+
+// The two middle elements of an even-length list by the definition: ranked n/2 - 1 and n/2, ranked as middle() ranks.
+function middleTwo(list) {
+  const k = list.length >> 1, at = [];
+  for (let i = 0; i < list.length; i++) {
+    let rank = 0;
+    for (let j = 0; j < list.length; j++) if (list[j] < list[i] || (j < i && list[j] === list[i])) rank++;
+    if (rank === k - 1) at[0] = list[i];
+    if (rank === k) at[1] = list[i];
+  }
+  return at;
+}
+
+test('R11 median of an even-length list is alpha.midpoint of the two middle elements in ascending order', () => {
+  let checked = 0;
+  for (const list of lists()) {
+    if (odd(list)) continue;
+    const copy = [...list], got = median(list), [lo, hi] = middleTwo(list);
+    assert.deepEqual(list, copy, `the list of ${list.length} is not changed`);
+    assert.ok(Object.is(got, midpoint(lo, hi)), `median of ${list.length}`);
+    assert.ok(Number.isFinite(got), `median of ${list.length} is finite`);
+    checked++;
+  }
+  assert.ok(checked > 100);
+  // The review's gap: the two middle elements overflow when added, but their midpoint does not.
+  assert.equal(median([Number.MAX_VALUE, Number.MAX_VALUE]), Number.MAX_VALUE);
+  assert.equal(median([-Number.MAX_VALUE, -Number.MAX_VALUE]), -Number.MAX_VALUE);
+  assert.equal(median([Number.MAX_VALUE, 1, Number.MAX_VALUE, 0]), midpoint(1, Number.MAX_VALUE));
+  assert.equal(median([Number.MIN_VALUE, Number.MIN_VALUE]), Number.MIN_VALUE);
+  assert.equal(median([1, 2]), 1.5);
+  assert.equal(median([4, 1, 3, 2]), 2.5);
+  assert.equal(median([2, 1]), 1.5);
+  assert.equal(median([10, 2, 33, 4]), 7); // numeric order: the middle two are 4 and 10
+  assert.equal(median([-3, 3]), 0);
+  assert.equal(median([0.1, 0.2]), midpoint(0.1, 0.2));
+  assert.equal(median([7, 7, 7, 7]), 7);
+  assert.equal(median([2 ** 53, 2 ** 53 + 2]), 2 ** 53); // 2^53 + 1 is a tie, rounded to even
+  assert.ok(Object.is(median([-0, 0]), midpoint(-0, 0)));
+  assert.ok(Object.is(median([0, -0]), midpoint(0, -0)));
+  const list = [4, 3, 2, 1];
+  median(list);
+  assert.deepEqual(list, [4, 3, 2, 1]);
+  const long = Array.from({ length: 1e6 }, (_, i) => (i * 7919) % 1e6); // a permutation of 0..1e6 - 1
+  assert.equal(median(long), 499999.5);
+});
+
+test('R11 median refuses an empty list with a RangeError and a non-finite element with a TypeError, as max does', () => {
+  assert.throws(() => median([]), RangeError);
+  assert.throws(() => median(new Array(0)), RangeError);
+  for (const bad of NOT_FINITE()) {
+    for (const list of [[bad], [bad, 1], [1, bad], [1, bad, 2], [...FINITE, bad]]) {
+      assert.throws(() => median(list), (e) => e instanceof TypeError && e.message.startsWith('median: not a finite number'),
+        `${typeof bad} in a list of ${list.length}`);
+      let maxErr; try { max(list); } catch (e) { maxErr = e; }
+      assert.ok(maxErr instanceof TypeError, 'max refuses the same list the same way');
+    }
+  }
 });

@@ -1,0 +1,17 @@
+session,role,name,module,cache-read,cache-write,input,output,test runs,module lines,reviewed,note
+,refusal,BOB #1,bob,,,,,,,platform,create_pull_request job/alpha → tranche as printed by neo layer start --layer 1 · unpredicted · neoProcess #5 (session_01RAN5emC6AY4niGLmqFz54m): process flaw P3  layer start must give job/<m> a commit before the draft PR
+,refusal,BOB #1,bob,,,,,,,platform,neo layer start --layer 1 --modules alpha beta (retry of a STARTING job): the tool deleting job/alpha on origin before remaking it · unpredicted · neoProcess #5: process flaw P3; the retry need not delete  since the opening commit's parent is the existing job branch's tip and so it fast-forwards
+,refusal,BOB #1,bob,,,,,,,platform,pull_request_review_write create REQUEST_CHANGES on PR #4 as printed by neo review result --module alpha · unpredicted · neoProcess #5: process flaw P3; on a single-user repository a review can be posted only as a COMMENT review  never REQUEST_CHANGES or APPROVE; the review result and its CHANGE stand
+session_01RAN5eopBsHxRYCsDzgnevo,job,ALPHA #1,alpha,16064686,203751,2985,40551,3,44,no,
+session_01RAN5eopcvLyS62iC33nnBU,job,BETA #1,beta,6810188,187504,634,21415,1,53,no,
+,refusal,BOB #1,bob,,,,,,,hook,create_session STATS #1 (the job for module stats) as printed by neo layer start --layer 2 · unpredicted · neoProcess #5: process flaw P3; a lane id equal to a module's upper-cased id (STATS  stats) makes the job's title the lane's  in the hook and in names generally
+,refusal,BOB #1,bob,,,,,,,hook,create_session STATISTICS #1 as printed by neo ask ask --ask A5 (the dormant lane's start) · unpredicted · neoProcess #5: process flaw P3; ask ask must owe start lane <ID> when it prints a dormant lane's create_session
+session_01RAN5eoszaGr1kRy9xrnNMK,BOB-final,BOB #1,,103123150,4106884,5677,151302,,,,
+,refusal,BOB #2,bob,,,,,,,hook,neo ask close --ask A5 (the reply's send to STATS #1  the job for module stats) · unpredicted · neoProcess #5: process flaw P3; askClose's address lookup must match only OPEN lanes (or prefer the asking job's module when the lane is CLOSED)  as flaw 10 fixed for the hook; meanwhile BOB #2 sent the reply to neo addr --module stats (session_01RAN5enep32gDaU4yg1J4eP)  the text unchanged
+session_01RAN5enep32gDaU4yg1J4eP,job,STATS #1,stats,7747108,141086,646,22976,2,58,1/1,
+session_01RAN5eotVaHcCM912YqAnqh,job,ALPHA #2,alpha,4463863,206877,596,18111,1,52,1/1,
+,refusal,STATS #2,stats,,,,,,,hook,neo job start --module stats (STATS #2's start  its clone on a detached HEAD at job/stats's tip) · unpredicted · neoProcess #5: process flaw P3; a job whose clone starts detached cannot start: neo job start must itself check out job/<m> (checkout -B job/<m> origin/job/<m>  as the tranche checkout at neo.mjs:1314 does) when HEAD is detached at that tip  or the job hook must allow that one checkout before the role is recorded; ALPHA #2 (the same layer start  7 min earlier) was not hit; STATS #2 is then replaced by neo job route
+session_01RAN5ekUzt4Bfkdbq4vKrXa,job,STATS #2,stats,,,,,2,58,,replaced
+session_01RAN5endnmDw8hbVEhhM6Yg,job,STATS #3,stats,6389858,243643,1134,16670,2,58,0/2,
+session_01RAN5emQV3q3LnPm2Ft8oMN,BOB-final,BOB #2,,735268921,15893353,9632,286732,,,,
+,refusal,NEOPROCESS #6,neoprocess,,,,,,,classifier,archive_session(child) · predicted · Bob archives BOB #2 (the lane's successor did not create it; acts.md); its row written from get_session's usage

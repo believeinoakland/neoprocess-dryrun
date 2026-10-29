@@ -1,11 +1,12 @@
 // stats: statistics for the toy product; extracted from legacy (mean in D3, max and min in D4),
 // and from catalog (distinct in D5).
-import { sum } from '../../alpha/src/index.mjs';
+import { sum, midpoint } from '../../alpha/src/index.mjs';
 
-// R1–R2: alpha.sum / length, 0 for an empty list; alpha.sum refuses a non-finite element.
+// R1–R2: alpha.sum / length for a non-empty list; an empty list is a RangeError, judged before alpha.sum is asked,
+// and alpha.sum refuses a non-finite element.
 export function mean(list) {
-  const total = sum(list);
-  return list.length ? total / list.length : 0;
+  if (list.length === 0) throw new RangeError('mean: empty list');
+  return sum(list) / list.length;
 }
 
 // The extreme of a non-empty list of finite numbers, by a loop (no spread, so no argument limit).
@@ -40,4 +41,17 @@ export function distinct(list) {
     seen.add(x);
   }
   return true;
+}
+
+// R10–R11: the middle element of a stable sorted copy (the list is not changed; -0 and +0 keep their order) for an
+// odd length, and alpha.midpoint of the two middle elements for an even length. An empty list is a RangeError first,
+// then an element that is not a finite number is a TypeError, as max refuses them (R5, R8).
+export function median(list) {
+  if (list.length === 0) throw new RangeError('median: empty list');
+  for (const x of list) {
+    if (typeof x !== 'number' || !Number.isFinite(x)) throw new TypeError(`median: not a finite number: ${String(x)}`);
+  }
+  const sorted = [...list].sort((a, b) => a - b);
+  const mid = sorted.length >> 1;
+  return sorted.length % 2 ? sorted[mid] : midpoint(sorted[mid - 1], sorted[mid]);
 }

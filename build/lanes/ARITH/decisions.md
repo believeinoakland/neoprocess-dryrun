@@ -1,0 +1,5 @@
+# ARITH: decisions (durable; cited as L-ARITH-<n>)
+- L-ARITH-1 · 2026-10-29 · A1 · a reduction of an empty list yields its operation's identity and is never refused: sum([]) is 0, product([]) is 1 (canon §3, written by ARITH at 8de90c0) · .claude/rules/arithmetic.md, build/requirements/alpha.md
+- re-chartered · 2026-10-29 · the Statistics area builds a median on two numbers' midpoint (plan N12); the arithmetic of combining numbers for another area's use, such as a midpoint, is named as ARITH's
+- L-ARITH-2 · 2026-10-29 · A6 · an overflowing sum of two finite numbers is an infinity carried on; halving is multiplication by 0.5; the midpoint of a and b is one operation, the exact (a + b) / 2 rounded once, finite whenever a and b are (canon §4, written by ARITH at 2ac730e) · .claude/rules/arithmetic.md
+- closed · 2026-10-29 · N1's last round closed; no ask open and no work left for the Arithmetic area in the tranche

@@ -20,8 +20,12 @@ Arithmetic on numbers.
 - **R4** Throws a `TypeError` when an element is not a finite number (a non-number, `NaN` or an infinity); nothing is coerced or skipped.
 
 **product(list) → number** (written ahead for N1; met by alpha's job)
-- **R8** Returns the elements of `list` multiplied left to right (ordinary floating-point multiplication); the value for an empty list is what the Arithmetic canon defines (`requirements/arithmetic.md` §3). *(not yet met: N1)*
-- **R9** Throws a `TypeError` when an element is not a finite number, as `sum` does (R4); nothing is coerced or skipped. *(not yet met: N1)*
+- **R8** Returns the elements of `list` multiplied left to right (ordinary floating-point multiplication); the value for an empty list is `1`, the identity of multiplication, as the Arithmetic canon defines it (`requirements/arithmetic.md` §3; L-ARITH-1).
+- **R9** Throws a `TypeError` when an element is not a finite number, as `sum` does (R4); nothing is coerced or skipped.
+
+**midpoint(a, b) → number** (added by BOB for ask A5: the Statistics canon §3 needs the Arithmetic midpoint as one operation; met in the tranche's completion round)
+- **R10** Returns the midpoint of two finite numbers `a` and `b` as the Arithmetic canon defines it (`requirements/arithmetic.md` §4; L-ARITH-2): the exact value of `(a + b) / 2` rounded once, to nearest, ties to even, a finite number whenever `a` and `b` are; so `midpoint(Number.MAX_VALUE, Number.MAX_VALUE)` is `Number.MAX_VALUE` and `midpoint(Number.MIN_VALUE, Number.MIN_VALUE)` is `Number.MIN_VALUE`.
+- **R11** Throws a `TypeError` when either argument is not a finite number, as `add` does (R5); nothing is coerced.
 
 ## Private
 
@@ -35,4 +39,4 @@ None.
 
 ### Satisfies
 
-- `requirements/arithmetic.md` §1 (numbers), §2 (refusals); the dry run N1.
+- `requirements/arithmetic.md` §1 (numbers), §2 (refusals), §3 (empty lists), §4 (the midpoint); the dry run N1.
