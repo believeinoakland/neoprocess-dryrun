@@ -41,3 +41,11 @@ export function product(list) {
   for (const x of list) t *= finite(x, 'product', `element ${++i}`);
   return t;
 }
+
+// R10–R11: (a + b) / 2 rounded once. Where a + b is finite it is either exact (below 2^-1021, so the
+// halving is the one rounding) or the halving is exact (above it). Where it overflows, both arguments
+// are at least 2^971, so each half is exact and their sum is the one rounding.
+export function midpoint(a, b) {
+  const s = finite(a, 'midpoint', 'argument 1') + finite(b, 'midpoint', 'argument 2');
+  return Number.isFinite(s) ? s / 2 : a / 2 + b / 2;
+}

@@ -24,8 +24,8 @@ Arithmetic on numbers.
 - **R9** Throws a `TypeError` when an element is not a finite number, as `sum` does (R4); nothing is coerced or skipped.
 
 **midpoint(a, b) → number** (added by BOB for ask A5: the Statistics canon §3 needs the Arithmetic midpoint as one operation; met in the tranche's completion round)
-- **R10** Returns the midpoint of two finite numbers `a` and `b` as the Arithmetic canon defines it (`requirements/arithmetic.md` §4; L-ARITH-2): the exact value of `(a + b) / 2` rounded once, to nearest, ties to even, a finite number whenever `a` and `b` are; so `midpoint(Number.MAX_VALUE, Number.MAX_VALUE)` is `Number.MAX_VALUE` and `midpoint(Number.MIN_VALUE, Number.MIN_VALUE)` is `Number.MIN_VALUE`. *(not yet met: N1)*
-- **R11** Throws a `TypeError` when either argument is not a finite number, as `add` does (R5); nothing is coerced. *(not yet met: N1)*
+- **R10** Returns the midpoint of two finite numbers `a` and `b` as the Arithmetic canon defines it (`requirements/arithmetic.md` §4; L-ARITH-2): the exact value of `(a + b) / 2` rounded once, to nearest, ties to even, a finite number whenever `a` and `b` are; so `midpoint(Number.MAX_VALUE, Number.MAX_VALUE)` is `Number.MAX_VALUE` and `midpoint(Number.MIN_VALUE, Number.MIN_VALUE)` is `Number.MIN_VALUE`.
+- **R11** Throws a `TypeError` when either argument is not a finite number, as `add` does (R5); nothing is coerced.
 
 ## Private
 
