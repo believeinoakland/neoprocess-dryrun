@@ -30,7 +30,7 @@ Statistics over lists of numbers.
 
 **median(list) → number** (written ahead for N1; met by stats's job)
 - **R10** Returns the middle element of `list` sorted ascending when its length is odd; the list itself is not changed. `-0` and `+0` are equal in that order and equal elements keep their order in `list`, so `median([0, -0, 1])` is `-0` and `median([-0, 0, 1])` is `0`. (Wording clarified by BOB after STATS #1's finding in its first report.)
-- **R11** For an even length, the value midway between the two middle elements (taken in ascending order as R10 sorts), computed as the Statistics canon defines (`requirements/statistics.md` §3; L-STATISTICS-1): `alpha.midpoint` of the two; refuses an empty list with a `RangeError` and a non-finite element with a `TypeError`, as `max` does (R5, R8). *(not yet met: N1)*
+- **R11** For an even length, the value midway between the two middle elements (taken in ascending order as R10 sorts), computed as the Statistics canon defines (`requirements/statistics.md` §3; L-STATISTICS-1): `alpha.midpoint` of the two; refuses an empty list with a `RangeError` and a non-finite element with a `TypeError`, as `max` does (R5, R8).
 
 ## Private
 

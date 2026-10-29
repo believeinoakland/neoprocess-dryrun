@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { mean, max, min, distinct, median } from '../src/index.mjs';
-import { sum } from '../../alpha/src/index.mjs';
+import { sum, midpoint } from '../../alpha/src/index.mjs';
 
 // Finite numbers covering every class: zeros of both signs, subnormals, the extremes,
 // fractions whose sum rounds, integers beyond 2^53, and seeded random values.
@@ -212,7 +212,7 @@ function middle(list) {
 const odd = (l) => l.length % 2 === 1;
 
 test('R10 median returns the middle element of an odd-length list sorted ascending; the list is not changed', () => {
-  // Odd lengths only in this completion (N10): the even case is R11's and waits for its CHANGE.
+  // Odd lengths here; the even case is R11's.
   let checked = 0;
   for (const list of lists()) {
     if (!odd(list)) continue;
@@ -243,8 +243,52 @@ test('R10 median returns the middle element of an odd-length list sorted ascendi
   assert.equal(median(long), 5e5);
 });
 
+// The two middle elements of an even-length list by the definition: ranked n/2 - 1 and n/2, ranked as middle() ranks.
+function middleTwo(list) {
+  const k = list.length >> 1, at = [];
+  for (let i = 0; i < list.length; i++) {
+    let rank = 0;
+    for (let j = 0; j < list.length; j++) if (list[j] < list[i] || (j < i && list[j] === list[i])) rank++;
+    if (rank === k - 1) at[0] = list[i];
+    if (rank === k) at[1] = list[i];
+  }
+  return at;
+}
+
+test('R11 median of an even-length list is alpha.midpoint of the two middle elements in ascending order', () => {
+  let checked = 0;
+  for (const list of lists()) {
+    if (odd(list)) continue;
+    const copy = [...list], got = median(list), [lo, hi] = middleTwo(list);
+    assert.deepEqual(list, copy, `the list of ${list.length} is not changed`);
+    assert.ok(Object.is(got, midpoint(lo, hi)), `median of ${list.length}`);
+    assert.ok(Number.isFinite(got), `median of ${list.length} is finite`);
+    checked++;
+  }
+  assert.ok(checked > 100);
+  // The review's gap: the two middle elements overflow when added, but their midpoint does not.
+  assert.equal(median([Number.MAX_VALUE, Number.MAX_VALUE]), Number.MAX_VALUE);
+  assert.equal(median([-Number.MAX_VALUE, -Number.MAX_VALUE]), -Number.MAX_VALUE);
+  assert.equal(median([Number.MAX_VALUE, 1, Number.MAX_VALUE, 0]), midpoint(1, Number.MAX_VALUE));
+  assert.equal(median([Number.MIN_VALUE, Number.MIN_VALUE]), Number.MIN_VALUE);
+  assert.equal(median([1, 2]), 1.5);
+  assert.equal(median([4, 1, 3, 2]), 2.5);
+  assert.equal(median([2, 1]), 1.5);
+  assert.equal(median([10, 2, 33, 4]), 7); // numeric order: the middle two are 4 and 10
+  assert.equal(median([-3, 3]), 0);
+  assert.equal(median([0.1, 0.2]), midpoint(0.1, 0.2));
+  assert.equal(median([7, 7, 7, 7]), 7);
+  assert.equal(median([2 ** 53, 2 ** 53 + 2]), 2 ** 53); // 2^53 + 1 is a tie, rounded to even
+  assert.ok(Object.is(median([-0, 0]), midpoint(-0, 0)));
+  assert.ok(Object.is(median([0, -0]), midpoint(0, -0)));
+  const list = [4, 3, 2, 1];
+  median(list);
+  assert.deepEqual(list, [4, 3, 2, 1]);
+  const long = Array.from({ length: 1e6 }, (_, i) => (i * 7919) % 1e6); // a permutation of 0..1e6 - 1
+  assert.equal(median(long), 499999.5);
+});
+
 test('R11 median refuses an empty list with a RangeError and a non-finite element with a TypeError, as max does', () => {
-  // The even-length value waits for its CHANGE and QUESTION #2 (N10, N12); this completion tests the refusals.
   assert.throws(() => median([]), RangeError);
   assert.throws(() => median(new Array(0)), RangeError);
   for (const bad of NOT_FINITE()) {
