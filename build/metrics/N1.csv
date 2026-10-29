@@ -12,3 +12,4 @@ session_01RAN5enep32gDaU4yg1J4eP,job,STATS #1,stats,7747108,141086,646,22976,2,5
 session_01RAN5eotVaHcCM912YqAnqh,job,ALPHA #2,alpha,4463863,206877,596,18111,1,52,1/1,
 ,refusal,STATS #2,stats,,,,,,,hook,neo job start --module stats (STATS #2's start  its clone on a detached HEAD at job/stats's tip) · unpredicted · neoProcess #5: process flaw P3; a job whose clone starts detached cannot start: neo job start must itself check out job/<m> (checkout -B job/<m> origin/job/<m>  as the tranche checkout at neo.mjs:1314 does) when HEAD is detached at that tip  or the job hook must allow that one checkout before the role is recorded; ALPHA #2 (the same layer start  7 min earlier) was not hit; STATS #2 is then replaced by neo job route
 session_01RAN5ekUzt4Bfkdbq4vKrXa,job,STATS #2,stats,,,,,2,58,,replaced
+session_01RAN5endnmDw8hbVEhhM6Yg,job,STATS #3,stats,6389858,243643,1134,16670,2,58,0/2,
