@@ -41,3 +41,16 @@ export function distinct(list) {
   }
   return true;
 }
+
+// R10–R11: the middle element of a sorted copy (the list is not changed) for an odd length; for an even length,
+// alpha.sum of the two middle elements over 2 (QUESTION #2 open). An empty list is a RangeError first, then an element
+// that is not a finite number is a TypeError, as max refuses them (R5, R8).
+export function median(list) {
+  if (list.length === 0) throw new RangeError('median: empty list');
+  for (const x of list) {
+    if (typeof x !== 'number' || !Number.isFinite(x)) throw new TypeError(`median: not a finite number: ${String(x)}`);
+  }
+  const sorted = [...list].sort((a, b) => a - b);
+  const mid = sorted.length >> 1;
+  return sorted.length % 2 ? sorted[mid] : sum([sorted[mid - 1], sorted[mid]]) / 2;
+}
