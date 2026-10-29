@@ -29,7 +29,7 @@ Statistics over lists of numbers.
 - **R9** `true` when no two elements of `list` are the same value (as a `Set` compares them), else `false`; an empty list is distinct.
 
 **median(list) → number** (written ahead for N1; met by stats's job)
-- **R10** Returns the middle element of `list` sorted ascending when its length is odd; the list itself is not changed. *(not yet met: N1)*
+- **R10** Returns the middle element of `list` sorted ascending when its length is odd; the list itself is not changed.
 - **R11** For an even length, the value midway between the two middle elements, computed as the Statistics canon defines (`requirements/statistics.md` §3); refuses an empty list with a `RangeError` and a non-finite element with a `TypeError`, as `max` does (R5, R8). *(not yet met: N1)*
 
 ## Private
