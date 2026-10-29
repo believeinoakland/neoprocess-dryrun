@@ -1,20 +1,39 @@
 // alpha: arithmetic for the dry run's toy product.
 
-function finite(x, who) {
-  if (typeof x !== 'number' || !Number.isFinite(x)) throw new TypeError(`${who}: not a finite number: ${String(x)}`);
+// The value as a message shows it: a string in quotes, anything else as written.
+function shown(x) {
+  if (typeof x === 'string') return `'${x}'`;
+  if (typeof x === 'bigint') return `${x}n`;
+  if (typeof x === 'function') return '[function]';
+  if (Array.isArray(x)) { try { return JSON.stringify(x); } catch { return '[array]'; } }
+  if (x !== null && typeof x === 'object') return Object.prototype.toString.call(x);
+  return String(x);
+}
+
+// `who: <place> is not a finite number: <value>`, the place counted from 1 (N2).
+function finite(x, who, place) {
+  if (typeof x !== 'number' || !Number.isFinite(x)) throw new TypeError(`${who}: ${place} is not a finite number: ${shown(x)}`);
   return x;
 }
 
 // R1, R5: a + b for finite numbers; anything else throws.
 export function add(a, b) {
-  return finite(a, 'add') + finite(b, 'add');
+  return finite(a, 'add', 'argument 1') + finite(b, 'add', 'argument 2');
 }
 
 // R3–R4: left to right, 0 for an empty list; a non-finite element throws.
 // Elements are checked, then added as `add` adds them. A running total that overflows to
 // ±Infinity is carried on, not refused, since every element is finite (job record Q2).
 export function sum(list) {
-  let t = 0;
-  for (const x of list) t += finite(x, 'sum');
+  let t = 0, i = 0;
+  for (const x of list) t += finite(x, 'sum', `element ${++i}`);
+  return t;
+}
+
+// R8–R9: left to right, 1 for an empty list (QUESTION #1: the identity of multiplication);
+// a non-finite element throws, and a running total that overflows is carried on, as in `sum`.
+export function product(list) {
+  let t = 1, i = 0;
+  for (const x of list) t *= finite(x, 'product', `element ${++i}`);
   return t;
 }
