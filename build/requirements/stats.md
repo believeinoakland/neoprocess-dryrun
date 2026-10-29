@@ -11,7 +11,7 @@ Statistics over lists of numbers.
 ### Provides
 
 **mean(list) → number**
-- **R1** Returns the arithmetic mean of the numbers in `list`, computed as `alpha.sum(list) / list.length`, and `0` for an empty list.
+- **R1** Returns the arithmetic mean of the numbers in a non-empty `list`, computed as `alpha.sum(list) / list.length`; refuses an empty `list` with a `RangeError`, as `max` does (R5; `requirements/statistics.md` §2), the empty list judged before any element (ask A4). *(not yet met: N1)*
 - **R2** Refuses an element that is not a finite number as `alpha.sum` does.
 
 **max(list) → number**
