@@ -1,0 +1,3 @@
+session,role,name,module,cache-read,cache-write,input,output,test runs,module lines,reviewed,note
+,refusal,BOB #1,bob,,,,,,,platform,create_pull_request job/alpha → tranche as printed by neo layer start --layer 1 · unpredicted · neoProcess #5 (session_01RAN5emC6AY4niGLmqFz54m): process flaw P3  layer start must give job/<m> a commit before the draft PR
+,refusal,BOB #1,bob,,,,,,,platform,neo layer start --layer 1 --modules alpha beta (retry of a STARTING job): the tool deleting job/alpha on origin before remaking it · unpredicted · neoProcess #5: process flaw P3; the retry need not delete  since the opening commit's parent is the existing job branch's tip and so it fast-forwards
