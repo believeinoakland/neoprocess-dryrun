@@ -12,4 +12,4 @@ A function of this area refuses an argument or element that is not a finite numb
 
 ## §3 Empty lists
 
-(Not yet written: the lane decides what a reduction of an empty list yields, N1.)
+A reduction of this area over an empty list yields the identity of its operation and is never refused: the sum of no numbers is `0`, the product of no numbers is `1`. An empty list holds no element, so §2 has nothing to refuse. (L-ARITH-1, ask A1.)
