@@ -1,8 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(node */tools/neo.mjs *)",
-      "Bash(node tools/neo.mjs *)",
+      "Bash(node */tools/proc.mjs *)",
+      "Bash(node tools/proc.mjs *)",
       "Bash(node */checks/run.mjs *)",
       "Bash(node --test *)",
       "Bash(git fetch *)",
