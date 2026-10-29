@@ -1,6 +1,6 @@
 // stats: statistics for the toy product; extracted from legacy (mean in D3, max and min in D4),
 // and from catalog (distinct in D5).
-import { sum } from '../../alpha/src/index.mjs';
+import { sum, midpoint } from '../../alpha/src/index.mjs';
 
 // R1–R2: alpha.sum / length, 0 for an empty list; alpha.sum refuses a non-finite element.
 export function mean(list) {
@@ -43,9 +43,8 @@ export function distinct(list) {
 }
 
 // R10–R11: the middle element of a stable sorted copy (the list is not changed; -0 and +0 keep their order) for an
-// odd length. For an even length R11 asks alpha.midpoint of the two (A5), built in the completion round; until then
-// alpha.sum of the two over 2. An empty list is a RangeError first, then an element
-// that is not a finite number is a TypeError, as max refuses them (R5, R8).
+// odd length, and alpha.midpoint of the two middle elements for an even length. An empty list is a RangeError first,
+// then an element that is not a finite number is a TypeError, as max refuses them (R5, R8).
 export function median(list) {
   if (list.length === 0) throw new RangeError('median: empty list');
   for (const x of list) {
@@ -53,5 +52,5 @@ export function median(list) {
   }
   const sorted = [...list].sort((a, b) => a - b);
   const mid = sorted.length >> 1;
-  return sorted.length % 2 ? sorted[mid] : sum([sorted[mid - 1], sorted[mid]]) / 2;
+  return sorted.length % 2 ? sorted[mid] : midpoint(sorted[mid - 1], sorted[mid]);
 }
