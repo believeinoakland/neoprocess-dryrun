@@ -30,7 +30,11 @@ test('R1 add returns a + b for every pair of finite numbers in each class', () =
 
 // Every kind of value that is not a finite number.
 const NOT_FINITE = () => ['1', '', NaN, Infinity, -Infinity, null, undefined, {}, [1], [], true, false, 1n,
-  Symbol('x'), () => 1, new Number(1)];
+  Symbol('x'), () => 1, new Number(1),
+  // Values whose inspection throws: the refusal is still a TypeError.
+  { get [Symbol.toStringTag]() { throw new RangeError(); } },
+  new Proxy({}, { get() { throw new SyntaxError(); }, getPrototypeOf() { throw new SyntaxError(); } }),
+  (() => { const r = Proxy.revocable([], {}); r.revoke(); return r.proxy; })()];
 
 test('R5 add throws a TypeError when either argument is not a finite number, coercing nothing', () => {
   for (const bad of NOT_FINITE()) {

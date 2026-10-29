@@ -17,7 +17,11 @@ function* seeded(n, seed = 54321) {
 }
 const FINITE = [...EDGES, ...seeded(200)];
 const NOT_FINITE = () => ['1', '', NaN, Infinity, -Infinity, null, undefined, {}, [1], [], true, false, 1n,
-  Symbol('x'), () => 1, new Number(1)];
+  Symbol('x'), () => 1, new Number(1),
+  // Values whose inspection throws: the refusal is still a TypeError.
+  { get [Symbol.toStringTag]() { throw new RangeError(); } },
+  new Proxy({}, { get() { throw new SyntaxError(); }, getPrototypeOf() { throw new SyntaxError(); } }),
+  (() => { const r = Proxy.revocable([], {}); r.revoke(); return r.proxy; })()];
 
 const product = (list) => alpha.product(list);
 

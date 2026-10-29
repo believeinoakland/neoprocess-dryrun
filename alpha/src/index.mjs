@@ -1,13 +1,17 @@
 // alpha: arithmetic for the dry run's toy product.
 
-// The value as a message shows it: a string in quotes, anything else as written.
+// The value as a message shows it: a string in quotes, anything else as written. Showing it never
+// throws, whatever the value's getters or traps do, so the refusal stays a TypeError (R4, R5, R9).
 function shown(x) {
   if (typeof x === 'string') return `'${x}'`;
   if (typeof x === 'bigint') return `${x}n`;
   if (typeof x === 'function') return '[function]';
-  if (Array.isArray(x)) { try { return JSON.stringify(x); } catch { return '[array]'; } }
-  if (x !== null && typeof x === 'object') return Object.prototype.toString.call(x);
-  return String(x);
+  if (x === null || typeof x !== 'object') return String(x);
+  try {
+    return Array.isArray(x) ? JSON.stringify(x) : Object.prototype.toString.call(x);
+  } catch {
+    return '[object]';
+  }
 }
 
 // `who: <place> is not a finite number: <value>`, the place counted from 1 (N2).
