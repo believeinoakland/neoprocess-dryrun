@@ -7,6 +7,7 @@ import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { total } from '../src/index.mjs';
+import { sum } from '../../alpha/src/index.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -64,6 +65,11 @@ test('R4 total refuses an element that is not a finite number with a TypeError, 
       assert.throws(() => total(l), TypeError, `total([${l.map((x) => typeof x === 'symbol' ? 'Symbol' : String(x))}]) did not throw a TypeError`);
     }
   }
+  // N8: the words of the refusal are alpha.sum's, read from alpha at run time, never copied here.
+  let words;
+  try { sum(['1']); } catch (e) { words = e.message; }
+  assert.equal(typeof words, 'string', 'alpha.sum([\'1\']) did not throw');
+  assert.throws(() => total(['1']), { name: 'TypeError', message: words });
 });
 
 // The bundle script in a copy of the product's source, so a test can change sources freely.
