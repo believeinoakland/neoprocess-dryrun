@@ -17,5 +17,5 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: the gate (artifacts, ownership, the module's tests and its users', the checks, the sizes, the shims)
-        run: node .neoprocess/tools/neo.mjs gate --product "." --process "/home/user/civicos-process" --repo "believeinoakland/civicos-process" --ref "claude/modest-brahmagupta-vvaann" --base "${{ github.event.pull_request.base.sha }}"
+      - name: the gate (artifacts, ownership, the module's tests and its users', the checks, the sizes, the shims), against the merge ref's own base
+        run: node .neoprocess/tools/neo.mjs gate --product "." --process "/home/user/civicos-process" --repo "believeinoakland/civicos-process" --ref "claude/modest-brahmagupta-vvaann" --base HEAD^1
