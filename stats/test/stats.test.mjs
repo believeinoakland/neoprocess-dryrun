@@ -24,8 +24,13 @@ function* lists() {
   }
 }
 
-test('R1 mean is alpha.sum(list) / list.length, and 0 for an empty list', () => {
-  assert.ok(Object.is(mean([]), 0));
+test('R1 mean of a non-empty list is alpha.sum(list) / list.length; an empty list is a RangeError, judged first', () => {
+  // The empty list is refused as a RangeError, never read as alpha.sum's 0 for it.
+  for (const empty of [[], new Array(0), Array.from([])]) {
+    assert.throws(() => mean(empty), (e) => e.constructor === RangeError && e.message === 'mean: empty list');
+  }
+  let maxErr; try { max([]); } catch (e) { maxErr = e; }
+  assert.ok(maxErr instanceof RangeError, 'max refuses the empty list the same way');
   for (const list of lists()) {
     assert.ok(Object.is(mean(list), sum(list) / list.length), `mean of ${list.length}`);
   }
@@ -66,7 +71,7 @@ test('R3 mean, max, min, distinct and median are pure: no state, no input or out
     // Interleave other calls (throwing ones included), then repeat: results depend on the arguments alone.
     for (const a of FINITE) {
       for (const f of [mean, max, min, median]) { f([a, a]); assert.throws(() => f([a, NaN])); }
-      mean([]); distinct([]); distinct([a, a]); assert.throws(() => max([])); assert.throws(() => min([])); assert.throws(() => median([]));
+      assert.throws(() => mean([])); distinct([]); distinct([a, a]); assert.throws(() => max([])); assert.throws(() => min([])); assert.throws(() => median([]));
     }
     again = run();
   } finally {

@@ -2,10 +2,11 @@
 // and from catalog (distinct in D5).
 import { sum, midpoint } from '../../alpha/src/index.mjs';
 
-// R1–R2: alpha.sum / length, 0 for an empty list; alpha.sum refuses a non-finite element.
+// R1–R2: alpha.sum / length for a non-empty list; an empty list is a RangeError, judged before alpha.sum is asked,
+// and alpha.sum refuses a non-finite element.
 export function mean(list) {
-  const total = sum(list);
-  return list.length ? total / list.length : 0;
+  if (list.length === 0) throw new RangeError('mean: empty list');
+  return sum(list) / list.length;
 }
 
 // The extreme of a non-empty list of finite numbers, by a loop (no spread, so no argument limit).
