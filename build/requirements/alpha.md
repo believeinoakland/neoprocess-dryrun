@@ -20,8 +20,8 @@ Arithmetic on numbers.
 - **R4** Throws a `TypeError` when an element is not a finite number (a non-number, `NaN` or an infinity); nothing is coerced or skipped.
 
 **product(list) → number** (written ahead for N1; met by alpha's job)
-- **R8** Returns the elements of `list` multiplied left to right (ordinary floating-point multiplication); the value for an empty list is what the Arithmetic canon defines (`requirements/arithmetic.md` §3). *(not yet met: N1)*
-- **R9** Throws a `TypeError` when an element is not a finite number, as `sum` does (R4); nothing is coerced or skipped. *(not yet met: N1)*
+- **R8** Returns the elements of `list` multiplied left to right (ordinary floating-point multiplication); the value for an empty list is what the Arithmetic canon defines (`requirements/arithmetic.md` §3).
+- **R9** Throws a `TypeError` when an element is not a finite number, as `sum` does (R4); nothing is coerced or skipped.
 
 ## Private
 
