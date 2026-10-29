@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { add, sum } from '../src/index.mjs';
+import { add, sum, product } from '../src/index.mjs';
 
 // Finite numbers covering every class: zeros of both signs, subnormals, the extremes,
 // fractions whose sum rounds, integers beyond 2^53, and seeded random values.
@@ -30,7 +30,11 @@ test('R1 add returns a + b for every pair of finite numbers in each class', () =
 
 // Every kind of value that is not a finite number.
 const NOT_FINITE = () => ['1', '', NaN, Infinity, -Infinity, null, undefined, {}, [1], [], true, false, 1n,
-  Symbol('x'), () => 1, new Number(1)];
+  Symbol('x'), () => 1, new Number(1),
+  // Values whose inspection throws: the refusal is still a TypeError.
+  { get [Symbol.toStringTag]() { throw new RangeError(); } },
+  new Proxy({}, { get() { throw new SyntaxError(); }, getPrototypeOf() { throw new SyntaxError(); } }),
+  (() => { const r = Proxy.revocable([], {}); r.revoke(); return r.proxy; })()];
 
 test('R5 add throws a TypeError when either argument is not a finite number, coercing nothing', () => {
   for (const bad of NOT_FINITE()) {
@@ -94,4 +98,14 @@ test('R4 sum throws a TypeError for an element that is not a finite number, coer
       assert.throws(() => sum(list), TypeError, `${typeof bad} in a list of ${list.length}`);
     }
   }
+});
+
+test('N2 the TypeError messages of add, sum and product name the function, the position counted from 1, and the value', () => {
+  const says = (f, message) => assert.throws(f, (e) => e instanceof TypeError && e.message === message, message);
+  says(() => sum([1, '1']), "sum: element 2 is not a finite number: '1'");
+  says(() => add('x', 1), "add: argument 1 is not a finite number: 'x'");
+  says(() => add(1, NaN), 'add: argument 2 is not a finite number: NaN');
+  says(() => sum([Infinity]), 'sum: element 1 is not a finite number: Infinity');
+  says(() => product([2, 3, null]), 'product: element 3 is not a finite number: null');
+  says(() => product([1n]), 'product: element 1 is not a finite number: 1n');
 });
